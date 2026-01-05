@@ -1,6 +1,7 @@
 import { getProducts } from "@/lib/data";
 import { FilterSidebar } from "@/components/product/FilterSidebar";
 import { ProductGrid } from "@/components/product/ProductGrid";
+import { FeaturedCarousel } from "@/components/home/FeaturedCarousel";
 
 export default async function CategoryPage({
     params,
@@ -22,7 +23,7 @@ export default async function CategoryPage({
                     </div>
                 </div>
 
-                <section aria-labelledby="products-heading" className="pt-6 pb-24">
+                <section aria-labelledby="products-heading" className="pt-6 pb-6">
                     <h2 id="products-heading" className="sr-only">
                         Products
                     </h2>
@@ -37,6 +38,9 @@ export default async function CategoryPage({
                         </div>
                     </div>
                 </section>
+                <div className="py-8">
+                    <FeaturedCarousel />
+                </div>
             </main>
         </div>
     );
