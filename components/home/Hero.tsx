@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { fetchAmplienceContent } from "@/lib/amplience";
+
 
 interface AmplienceContent {
     content: {
@@ -17,7 +17,15 @@ interface AmplienceContent {
 }
 
 async function getHeroContent(): Promise<AmplienceContent> {
-    return fetchAmplienceContent<AmplienceContent>("8994073b-3fb7-44f5-b88f-6002aaade1eb");
+    const url = "https://jeanstag.cdn.content.amplience.net/content/id/d08c8cf5-29f7-4bdb-b77f-82b5ffe735bd?depth=all&format=inlined";
+
+    const res = await fetch(url, { next: { revalidate: 60 } });
+
+    if (!res.ok) {
+        throw new Error(`Failed to fetch content from Amplience: ${res.statusText}`);
+    }
+
+    return res.json();
 }
 
 export async function Hero() {

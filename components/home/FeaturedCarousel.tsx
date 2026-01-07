@@ -1,5 +1,5 @@
 import { FeaturedCarouselClient, CarouselItemData } from "./FeaturedCarouselClient";
-import { fetchAmplienceContent } from "@/lib/amplience";
+
 
 interface AmplienceCarouselItem {
     title: string;
@@ -19,7 +19,15 @@ interface AmplienceResponse {
 
 async function getCarouselContent(): Promise<CarouselItemData[]> {
     try {
-        const data = await fetchAmplienceContent<AmplienceResponse>("8422e8ee-0e65-446b-b49e-518187a31faf");
+        const url = "https://jeanstag.cdn.content.amplience.net/content/id/8422e8ee-0e65-446b-b49e-518187a31faf?depth=all&format=inlined";
+
+        const res = await fetch(url, { next: { revalidate: 60 } });
+
+        if (!res.ok) {
+            throw new Error(`Failed to fetch content from Amplience: ${res.statusText}`);
+        }
+
+        const data: AmplienceResponse = await res.json();
 
         return data.content.items.map((item, index) => {
             const imageUrl = `https://${item.image.defaultHost}/i/${item.image.endpoint}/${item.image.name}`;
