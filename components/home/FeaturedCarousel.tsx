@@ -19,7 +19,7 @@ interface AmplienceResponse {
 
 async function getCarouselContent(): Promise<CarouselItemData[]> {
     try {
-        const url = "https://jeanstag.cdn.content.amplience.net/content/id/8422e8ee-0e65-446b-b49e-518187a31faf?depth=all&format=inlined";
+        const url = "https://jeanstag.cdn.content.amplience.net/content/id/e6945ea0-a3cf-4dbb-be1c-fe3997aa7d39?depth=all&format=inlined";
 
         const res = await fetch(url, { next: { revalidate: 60 } });
 

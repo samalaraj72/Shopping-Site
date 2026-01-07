@@ -33,17 +33,18 @@ export function FeaturedCarouselClient({ items }: FeaturedCarouselClientProps) {
                 <h2 className="text-3xl font-bold text-center text-navy-900">Featured Collections</h2>
             </div>
 
-            <div className="w-full">
+            <div className="w-full px-16 relative">
                 <Carousel
                     opts={{
                         align: "start",
-                        loop: true,
+                        loop: false,
+                        slidesToScroll: 4,
                     }}
                     className="w-full"
                 >
                     <CarouselContent className="-ml-4">
                         {items.map((item) => (
-                            <CarouselItem key={item.id} className="pl-4 basis-[85%] sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5">
+                            <CarouselItem key={item.id} className="pl-4 basis-[85%] sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
                                 <div className="h-full">
                                     <Link href={item.link} className="block h-full transition-opacity hover:opacity-95">
                                         <Card className="border-0 shadow-lg overflow-hidden group h-full rounded-none sm:rounded-lg">
@@ -63,8 +64,8 @@ export function FeaturedCarouselClient({ items }: FeaturedCarouselClientProps) {
                         ))}
                     </CarouselContent>
                     <div className="hidden md:block">
-                        <CarouselPrevious className="left-4 h-12 w-12 bg-white/90 hover:bg-white border-none shadow-lg [&_svg]:h-6 [&_svg]:w-6 text-navy-900" />
-                        <CarouselNext className="right-4 h-12 w-12 bg-white/90 hover:bg-white border-none shadow-lg [&_svg]:h-6 [&_svg]:w-6 text-navy-900" />
+                        <CarouselPrevious className="h-12 w-12 bg-white/90 hover:bg-white border-none shadow-lg [&_svg]:h-6 [&_svg]:w-6 text-navy-900" />
+                        <CarouselNext className="h-12 w-12 bg-white/90 hover:bg-white border-none shadow-lg [&_svg]:h-6 [&_svg]:w-6 text-navy-900" />
                     </div>
                 </Carousel>
             </div>

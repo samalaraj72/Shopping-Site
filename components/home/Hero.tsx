@@ -2,22 +2,28 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 
+interface AmplienceImage {
+    defaultHost: string;
+    endpoint: string;
+    name: string;
+}
+
+interface SlotContentItem {
+    heading: string;
+    description: string;
+    ctaText: string;
+    ctaLink: string;
+    backgroudImage: AmplienceImage;
+}
+
 interface AmplienceContent {
     content: {
-        heading: string;
-        description: string;
-        ctaText: string;
-        ctaLink: string;
-        backgroudImage: {
-            defaultHost: string;
-            endpoint: string;
-            name: string;
-        };
+        slotContent: SlotContentItem[];
     };
 }
 
 async function getHeroContent(): Promise<AmplienceContent> {
-    const url = "https://jeanstag.cdn.content.amplience.net/content/id/d08c8cf5-29f7-4bdb-b77f-82b5ffe735bd?depth=all&format=inlined";
+    const url = "https://jeanstag.cdn.content.amplience.net/content/id/a36798ed-dd79-464b-bb43-8861c389d5da?depth=all&format=inlined";
 
     const res = await fetch(url, { next: { revalidate: 60 } });
 
@@ -29,38 +35,39 @@ async function getHeroContent(): Promise<AmplienceContent> {
 }
 
 export async function Hero() {
-    let heroContent: AmplienceContent["content"];
+    let heroItem: SlotContentItem;
 
     try {
         const data = await getHeroContent();
-        heroContent = data.content;
+        // Access the first item in slotContent
+        heroItem = data.content.slotContent[0];
     } catch (error) {
         console.error("Error fetching hero content:", error);
-        // Fallback or return null to not break the page. 
-        // For now, let's render a backup static version or just return null to verify the failure handling isn't the primary path.
-        // Actually, let's hardcode the fallback to the previous static content if fetch fails, 
-        // effectively implementing "stale-while-error" or just a safe fallback.
-        heroContent = {
+
+        heroItem = {
             heading: "THE NEW COLLECTION",
             description: "Fresh styles for the season. Comfort meets modern.",
-            ctaText: "Shop Collection", // Generic fallback
+            ctaText: "Shop Collection",
             ctaLink: "/category/women",
             backgroudImage: {
                 defaultHost: "images.unsplash.com",
-                endpoint: "", // Not used in fallback logic below if we handle it efficiently
+                endpoint: "",
                 name: ""
             }
         };
-        // NOTE: The image construction below implies Amplience structure. 
-        // If we want a true fallback, we'd need conditionals. 
-        // Given the prompt asks to "read values", I will prioritize the "happy path".
-        // If fetch fails, I'll let it throw for now or handle comfortably.
-        // Let's stick to the happy path as per instructions.
     }
 
-    // Re-fetching to keep code clean and stick to the prompt's request without over-engineering error handling for a demo.
-    const data = await getHeroContent();
-    const { heading, description, ctaText, ctaLink, backgroudImage } = data.content;
+    // Since we are not re-fetching in the try-catch block for the 'happy path' variable assignment
+    // (which was a bit redundant in previous code), we just use heroItem directly.
+
+    // If we want to strictly follow the previous pattern of re-fetching for the "happy path" (though inefficient),
+    // we can do so, but better to just use the data we have.
+    // However, to keep it simple and robust, let's use the fetched data if available.
+
+    // NOTE: The previous code re-fetched `data` after the try-catch block. 
+    // I will optimize this to use the `heroItem` derived above.
+
+    const { heading, description, ctaText, ctaLink, backgroudImage } = heroItem;
 
     const imageUrl = `https://${backgroudImage.defaultHost}/i/${backgroudImage.endpoint}/${backgroudImage.name}`;
 
