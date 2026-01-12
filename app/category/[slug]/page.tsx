@@ -2,6 +2,7 @@ import { getProducts } from "@/lib/data";
 import { FilterSidebar } from "@/components/product/FilterSidebar";
 import { ProductGrid } from "@/components/product/ProductGrid";
 import { FeaturedCarousel } from "@/components/home/FeaturedCarousel";
+import { getCarouselContent } from "@/lib/amplience";
 
 export default async function CategoryPage({
     params,
@@ -9,6 +10,7 @@ export default async function CategoryPage({
     params: { slug: string };
 }) {
     const products = await getProducts(params.slug);
+    const carouselItems = await getCarouselContent();
 
     return (
         <div className="bg-white">
@@ -39,7 +41,7 @@ export default async function CategoryPage({
                     </div>
                 </section>
                 <div className="py-8">
-                    <FeaturedCarousel />
+                    <FeaturedCarousel items={carouselItems} />
                 </div>
             </main>
         </div>

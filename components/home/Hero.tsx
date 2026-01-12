@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 
 interface AmplienceImage {
@@ -91,9 +92,12 @@ export async function Hero() {
                     {description}
                 </p>
                 <div className="mt-8 flex gap-4">
-                    <Button asChild size="lg" className="bg-white text-navy-900 override:text-navy-900 hover:bg-gray-100 font-semibold">
-                        <Link href={ctaLink}>{ctaText}</Link>
-                    </Button>
+                    <Link
+                        href={ctaLink}
+                        className={cn(buttonVariants({ size: "lg" }), "bg-white text-navy-900 hover:bg-gray-100 font-semibold")}
+                    >
+                        {ctaText}
+                    </Link>
                 </div>
             </div>
         </div>
