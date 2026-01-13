@@ -1,0 +1,36 @@
+{
+  "name": "myzap",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev:backend": "npm run dev --workspace=backend",
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "dev": "npm run dev:backend & npm run dev:frontend",
+    "build:backend": "npm run build --workspace=backend",
+    "build:frontend": "npm run build --workspace=frontend",
+    "build": "npm run build:backend && npm run build:frontend",
+    "start:backend": "npm run start --workspace=backend",
+    "start:frontend": "npm run start --workspace=frontend",
+    "start": "npm run start:backend & npm run start:frontend"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
+    "dc-delivery-sdk-js": "^0.9.0",
+    "jsonwebtoken": "^9.0.2",
+    "prisma": "^7.2.0"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/jsonwebtoken": "^9.0.10"
+  }
+}

@@ -1,0 +1,193 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String    @id @default(cuid())
+  firstName    String
+  lastName     String
+  email        String    @unique
+  phone        String?
+  passwordHash String
+  role         String    @default("USER")
+  isVerified   Boolean   @default(false)
+  createdAt    DateTime  @default(now())
+  addresses    Address[]
+  orders       Order[]
+  wishlist     Wishlist?
+  reviews      Review[]
+  cart         Cart?
+}
+
+model Address {
+  id        String  @id @default(cuid())
+  user      User    @relation(fields: [userId], references: [id])
+  userId    String
+  line1     String
+  line2     String?
+  city      String
+  state     String
+  zip       String
+  country   String
+  isDefault Boolean @default(false)
+  Order     Order[]
+}
+
+model Product {
+  id            String           @id @default(cuid())
+  name          String
+  slug          String           @unique
+  description   String
+  category      Category         @relation(fields: [categoryId], references: [id])
+  categoryId    String
+  brandId       String
+  basePrice     Float
+  discountPrice Float?
+  rating        Float            @default(0)
+  totalReviews  Int              @default(0)
+  isActive      Boolean          @default(true)
+  createdAt     DateTime         @default(now())
+  variants      ProductVariant[]
+  images        ProductImage[]
+  reviews       Review[]
+  wishlistItems WishlistItem[]
+}
+
+model ProductVariant {
+  id         String      @id @default(cuid())
+  product    Product     @relation(fields: [productId], references: [id])
+  productId  String
+  size       String
+  color      String
+  sku        String      @unique
+  stockQty   Int
+  price      Float
+  cartItems  CartItem[]
+  orderItems OrderItem[]
+}
+
+model ProductImage {
+  id        String  @id @default(cuid())
+  product   Product @relation(fields: [productId], references: [id])
+  productId String
+  url       String
+  isPrimary Boolean @default(false)
+}
+
+model Category {
+  id            String     @id @default(cuid())
+  name          String
+  slug          String     @unique
+  displayOrder  Int
+  parent        Category?  @relation("SubCategories", fields: [parentId], references: [id])
+  parentId      String?
+  subCategories Category[] @relation("SubCategories")
+  products      Product[]
+}
+
+model Cart {
+  id     String     @id @default(cuid())
+  user   User       @relation(fields: [userId], references: [id])
+  userId String     @unique
+  status String
+  items  CartItem[]
+}
+
+model CartItem {
+  id               String         @id @default(cuid())
+  cart             Cart           @relation(fields: [cartId], references: [id])
+  cartId           String
+  productVariant   ProductVariant @relation(fields: [productVariantId], references: [id])
+  productVariantId String
+  qty              Int
+  price            Float
+}
+
+model Order {
+  id                String      @id @default(cuid())
+  user              User        @relation(fields: [userId], references: [id])
+  userId            String
+  status            String
+  totalAmount       Float
+  paymentStatus     String
+  shippingAddress   Address     @relation(fields: [shippingAddressId], references: [id])
+  shippingAddressId String
+  createdAt         DateTime    @default(now())
+  items             OrderItem[]
+  payment           Payment[]
+}
+
+model OrderItem {
+  id               String         @id @default(cuid())
+  order            Order          @relation(fields: [orderId], references: [id])
+  orderId          String
+  productVariant   ProductVariant @relation(fields: [productVariantId], references: [id])
+  productVariantId String
+  qty              Int
+  price            Float
+}
+
+model Payment {
+  id            String  @id @default(cuid())
+  order         Order   @relation(fields: [orderId], references: [id])
+  orderId       String
+  amount        Float
+  method        String
+  status        String
+  transactionId String?
+}
+
+model Wishlist {
+  id     String         @id @default(cuid())
+  user   User           @relation(fields: [userId], references: [id])
+  userId String         @unique
+  items  WishlistItem[]
+}
+
+model WishlistItem {
+  id         String   @id @default(cuid())
+  wishlist   Wishlist @relation(fields: [wishlistId], references: [id])
+  wishlistId String
+  product    Product  @relation(fields: [productId], references: [id])
+  productId  String
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  product   Product  @relation(fields: [productId], references: [id])
+  productId String
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+}
+
+model Promotion {
+  id                String   @id @default(cuid())
+  code              String   @unique
+  discountType      String
+  discountValue     Float
+  minimumOrderValue Float?
+  expiryDate        DateTime
+}
+
+model BannerCampaign {
+  id          String   @id @default(cuid())
+  title       String
+  imageUrl    String
+  redirectUrl String
+  startDate   DateTime
+  endDate     DateTime
+}
